@@ -1,0 +1,70 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3 class="mb-3">
+                        Delete Expense
+                    </h3>
+
+                    <p>
+                        Are you sure you want to delete this expense?
+                    </p>
+
+                    <div class="alert alert-warning">
+
+                        <strong>
+                            {{ expense.title }}
+                        </strong>
+
+                        <br>
+
+                        Amount:
+                        ₹{{ expense.amount }}
+
+                        <br>
+
+                        Date:
+                        {{ expense.date }}
+
+                    </div>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger">
+                            Yes, Delete
+                        </button>
+
+                        <a
+                            href="{% url 'transaction_history' %}"
+                            class="btn btn-secondary ms-2">
+                            Cancel
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

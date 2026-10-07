@@ -1,0 +1,172 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Add Expense{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-7">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body p-4">
+
+                <h2 class="mb-4">
+                    Add New Expense
+                </h2>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+                    <!-- Title -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Expense Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            placeholder="Example: Lunch"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Category -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Category
+                        </label>
+
+                        <select
+                            name="category"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Category
+                            </option>
+
+                            {% for category in categories %}
+
+                            <option value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Add Category -->
+
+                    <div class="mb-3">
+
+                        <a
+                            href="{% url 'add_category' %}"
+                            class="btn btn-sm btn-outline-secondary">
+
+                            + Add New Category
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Amount -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            name="amount"
+                            class="form-control"
+                            step="0.01"
+                            min="0"
+                            placeholder="Example: 250"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Date -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            class="form-control"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="description"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Optional description">
+                        </textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        Add Expense
+
+                    </button>
+
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

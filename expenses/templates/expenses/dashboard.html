@@ -1,0 +1,328 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Dashboard - Smart Expense Manager{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Welcome -->
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2>
+            Welcome, {{ user.username }} 👋
+        </h2>
+
+        <p class="text-muted">
+            Here's your financial overview.
+        </p>
+
+    </div>
+
+    <div>
+    <div>
+
+    <a
+        href="{% url 'add_expense' %}"
+        class="btn btn-danger">
+        + Add Expense
+    </a>
+
+    <a
+        href="{% url 'add_income' %}"
+        class="btn btn-success ms-2">
+        + Add Income
+    </a>
+
+    <a
+        href="{% url 'set_budget' %}"
+        class="btn btn-primary ms-2">
+        Set Budget
+    </a>
+    <a
+       href="{% url 'transaction_history' %}"
+       class="btn btn-dark ms-2">
+       Transaction History
+    </a>
+</div>
+</div>
+
+</div>
+
+
+    <!-- Summary Cards -->
+    <div class="row g-4">
+
+        <!-- Income -->
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Total Income
+                    </h6>
+
+                    <h3 class="text-success">
+                        ₹{{ total_income }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Expenses -->
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Total Expenses
+                    </h6>
+
+                    <h3 class="text-danger">
+                        ₹{{ total_expenses }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Balance -->
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Current Balance
+                    </h6>
+
+                    <h3 class="text-primary">
+                        ₹{{ balance }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Budget -->
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Monthly Budget
+                    </h6>
+
+                    <h3 class="text-warning">
+                        ₹{{ budget_amount }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-md-3 mb-3">
+
+    <div class="card shadow-sm h-100">
+
+        <div class="card-body">
+
+            <h6 class="text-muted">
+                Remaining Budget
+            </h6>
+
+            <h3>
+                ₹{{ remaining_budget }}
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- Recent Expenses -->
+
+    <div class="card shadow-sm border-0 mt-5">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                Recent Expenses
+            </h4>
+
+            {% if recent_expenses %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for expense in recent_expenses %}
+
+                        <tr>
+
+                            <td>
+                                {{ expense.title }}
+                            </td>
+
+                            <td>
+                                {{ expense.category.name }}
+                            </td>
+
+                            <td class="text-danger">
+                                ₹{{ expense.amount }}
+                            </td>
+
+                            <td>
+                                {{ expense.date }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-4">
+
+                <p class="text-muted">
+                    No expenses recorded yet.
+                </p>
+
+                <p>
+                    Add your first expense to see it here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+<!-- Expense Chart -->
+
+<div class="row mt-4">
+
+    <div class="col-md-7">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title mb-4">
+                    Expense by Category
+                </h5>
+
+                <canvas id="expenseChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const categoryNames = {{ category_names|safe }};
+
+    const categoryAmounts = {{ category_amounts|safe }};
+
+    const ctx = document
+        .getElementById("expenseChart")
+        .getContext("2d");
+
+    new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: categoryNames,
+
+            datasets: [
+
+                {
+
+                    label: "Expenses",
+
+                    data: categoryAmounts,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+{% endblock %}

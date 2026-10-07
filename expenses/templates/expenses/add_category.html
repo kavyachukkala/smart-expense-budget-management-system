@@ -1,0 +1,61 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Add Category{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body p-4">
+
+                <h2 class="mb-4">
+                    Add Expense Category
+                </h2>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Category Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            placeholder="Example: Food"
+                            required
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark">
+                        Add Category
+                    </button>
+
+                    <a
+                        href="{% url 'add_expense' %}"
+                        class="btn btn-secondary">
+                        Back
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
